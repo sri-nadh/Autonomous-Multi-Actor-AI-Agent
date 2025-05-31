@@ -1,12 +1,6 @@
-#!/usr/bin/env python3
-"""
-Test script to verify all agents are working correctly
-"""
-
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 def test_sql_agent():
