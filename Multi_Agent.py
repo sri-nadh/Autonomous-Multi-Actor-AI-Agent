@@ -1,13 +1,9 @@
 import os
 from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
 from langchain_openai import ChatOpenAI
 from typing import Literal, Annotated, Sequence
 from typing_extensions import TypedDict
-from langchain_tavily import TavilySearchAPIWrapper
+from langchain_tavily import TavilySearch
 from langgraph.graph import MessagesState, START, END, StateGraph, add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import Command
@@ -16,11 +12,12 @@ from RAG_Agent import retriever_tool
 from langchain_core.messages import BaseMessage, HumanMessage
 
 
-# Check for required API keys
-if not os.getenv("OPENAI_API_KEY"):
-    print("⚠️  Warning: OPENAI_API_KEY not set. Please check your .env file.")
+load_dotenv()
 
-llm = ChatOpenAI(model_name=os.getenv("OPENAI_MODEL", "gpt-4o"))
+api_key = os.getenv("OPENAI_API_KEY")
+model = os.getenv("OPENAI_MODEL")
+
+llm = ChatOpenAI(model=model, api_key=api_key)
 
 
 # Define available agents
@@ -100,13 +97,8 @@ def create_agent(llm, tools):
 def create_web_search_tool():
     """Create web search tool with proper error handling."""
     try:
-        # Check if API key is available
-        if not os.getenv("TAVILY_API_KEY"):
-            print("⚠️  Warning: TAVILY_API_KEY not set. Web search will not be available.")
-            return None
-        
-        from langchain_community.tools.tavily_search import TavilySearchResults
-        return TavilySearchResults(max_results=2)
+        return TavilySearch(max_results=2,topic="news")
+    
     except Exception as e:
         print(f"Warning: Could not initialize Tavily Search: {str(e)}")
         print("Make sure TAVILY_API_KEY is set in your environment variables.")
