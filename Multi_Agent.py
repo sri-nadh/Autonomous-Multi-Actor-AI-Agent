@@ -3,12 +3,12 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from typing import Literal, Annotated, Sequence
 from typing_extensions import TypedDict
-from langchain_tavily import TavilySearch
 from langgraph.graph import MessagesState, START, END, StateGraph, add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import Command
 from SQL_Query_Agent import nl2sql_tool
 from RAG_Agent import retriever_tool
+from WebSearch_Agent import web_search_tool_func
 from langchain_core.messages import BaseMessage, HumanMessage
 
 
@@ -94,47 +94,24 @@ def create_agent(llm, tools):
 
 #------------------------------------------------Web Search AGENT------------------------------------------------------#
 
-def create_web_search_tool():
-    """Create web search tool with proper error handling."""
+websearch_agent = create_agent(llm, [web_search_tool_func])
+
+def web_research_node(state: MessagesState) -> Command[Literal["supervisor"]]:
     try:
-        return TavilySearch(max_results=2,topic="news")
-    
-    except Exception as e:
-        print(f"Warning: Could not initialize Tavily Search: {str(e)}")
-        print("Make sure TAVILY_API_KEY is set in your environment variables.")
-        return None
-
-web_search_tool = create_web_search_tool()
-
-if web_search_tool:
-    websearch_agent = create_agent(llm, [web_search_tool])
-    
-    def web_research_node(state: MessagesState) -> Command[Literal["supervisor"]]:
-        try:
-            result = websearch_agent.invoke(state)
-            return Command(
-                update={
-                    "messages": [
-                        HumanMessage(content=result["messages"][-1].content, name="web_researcher")
-                    ]
-                },
-                goto="supervisor",
-            )
-        except Exception as e:
-            return Command(
-                update={
-                    "messages": [
-                        HumanMessage(content=f"Web search error: {str(e)}", name="web_researcher")
-                    ]
-                },
-                goto="supervisor",
-            )
-else:
-    def web_research_node(state: MessagesState) -> Command[Literal["supervisor"]]:
+        result = websearch_agent.invoke(state)
         return Command(
             update={
                 "messages": [
-                    HumanMessage(content="Web search not available. Please set TAVILY_API_KEY.", name="web_researcher")
+                    HumanMessage(content=result["messages"][-1].content, name="web_researcher")
+                ]
+            },
+            goto="supervisor",
+        )
+    except Exception as e:
+        return Command(
+            update={
+                "messages": [
+                    HumanMessage(content=f"Web search error: {str(e)}", name="web_researcher")
                 ]
             },
             goto="supervisor",

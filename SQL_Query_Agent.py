@@ -41,7 +41,7 @@ else:
     db = None
 
 
-llm = ChatOpenAI(model_name="gpt-4o")
+llm = ChatOpenAI(model="gpt-4o")
 
 
 def clean_sql_query(text: str) -> str:

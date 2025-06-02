@@ -1,6 +1,8 @@
+
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 def test_sql_agent():
@@ -41,11 +43,10 @@ def test_web_search_agent():
             print("⚠️  Skipping web search test - TAVILY_API_KEY not set")
             return True
             
-        from langchain_community.tools.tavily_search import TavilySearchResults
+        from WebSearch_Agent import web_search_tool_func
         
-        search_tool = TavilySearchResults(max_results=1)
-        result = search_tool.invoke({"query": "latest AI news"})
-        print(f"✅ Web Search Agent test result: {len(result)} results found")
+        result = web_search_tool_func.invoke({"query": "latest AI news"})
+        print(f"✅ Web Search Agent test result: {len(result.split())} words returned")
         return True
     except Exception as e:
         print(f"❌ Web Search Agent test failed: {str(e)}")
