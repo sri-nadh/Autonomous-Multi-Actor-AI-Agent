@@ -18,10 +18,21 @@ pip install -r requirements.txt
 
 ### 2. Environment Variables
 
-Copy `env_example.txt` to `.env` and fill in your API keys:
+Create a `.env` file in the project root and add your API keys:
 
 ```bash
-cp env_example.txt .env
+# OpenAI API Key (required for all agents)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Tavily API Key (required for web search agent)
+TAVILY_API_KEY=your_tavily_api_key_here
+
+# Optional: Custom model names
+OPENAI_MODEL=gpt-4o
+
+# Optional: Custom paths
+DOCS_FOLDER=./docs
+CHROMA_DB_PATH=./chroma_db
 ```
 
 Required API keys:
@@ -47,8 +58,10 @@ Multi-Actor-AI-Agent/
 ├── Multi_Agent.py          # Main orchestrator with StateGraph
 ├── SQL_Query_Agent.py      # NL2SQL agent
 ├── RAG_Agent.py           # Document retrieval agent
+├── WebSearch_Agent.py     # Web search agent
+├── test_agents.py         # Testing script
 ├── requirements.txt       # Python dependencies
-├── env_example.txt       # Environment variables template
+├── README.md             # This file
 ├── docs/                 # Place your documents here (auto-created)
 ├── chroma_db/           # Vector database (auto-created)
 └── Chinook.db          # SQLite database (auto-downloaded)
@@ -72,6 +85,14 @@ run_agent(question)
 python Multi_Agent.py
 ```
 
+### Testing the System
+
+Run the test script to verify all agents are working:
+
+```bash
+python test_agents.py
+```
+
 ### Example Queries
 
 - **Web Search**: "What are the latest developments in AI?"
@@ -87,60 +108,51 @@ python Multi_Agent.py
 - Document folder auto-creation for RAG agent
 
 ### Modern Architecture
-- Updated to latest LangGraph patterns
+- Updated to latest LangGraph patterns with Command-based routing
 - Structured output routing
 - Parallel tool execution
 - Comprehensive error handling
+- Modular agent design
 
 ### Flexibility
 - Easy to add new agents
 - Configurable model selection
 - Customizable routing logic
+- Separated agent files for better maintainability
 
-## 🔧 Troubleshooting
+## 🔧 Agent Architecture
 
-### Common Issues
+Each agent is implemented as a separate module:
 
-1. **ModuleNotFoundError**: Make sure all dependencies are installed with `pip install -r requirements.txt`
+### WebSearch_Agent.py
+- Handles real-time web searches using Tavily
+- Returns formatted search results with titles, content, and URLs
+- Includes error handling for missing API keys
 
-2. **API Key Errors**: Ensure your `.env` file has valid API keys
+### RAG_Agent.py
+- Document loading from PDF and DOCX files
+- Vector storage using ChromaDB and Sentence Transformers
+- Semantic similarity search for document retrieval
 
-3. **Web Search Not Working**: Check that `TAVILY_API_KEY` is set correctly
+### SQL_Query_Agent.py
+- Natural language to SQL query conversion
+- Automatic Chinook database setup
+- SQL query cleaning and execution
 
-4. **RAG Agent No Results**: Add documents to the `docs` folder and restart
+### Multi_Agent.py
+- Supervisor-based routing using Command pattern
+- Dynamic agent selection based on query type
+- State management across agent interactions
 
-5. **SQL Agent Errors**: The Chinook database should download automatically. If not, manually download from the Chinook database repository.
+## 🧪 Testing
 
-### Debug Mode
+The `test_agents.py` script provides comprehensive testing:
 
-For detailed logging, you can modify the print statements in each agent file or add:
+- Individual agent functionality tests
+- Integration testing of the complete system
+- API key validation
+- Error handling verification
 
-```python
-import logging
-logging.basicConfig(level=logging.DEBUG)
-```
-
-## 📝 Customization
-
-### Adding New Agents
-
-1. Create a new agent file (e.g., `New_Agent.py`)
-2. Define a tool using the `@tool` decorator
-3. Add the agent to `Multi_Agent.py`:
-   - Import the tool
-   - Add to `members` list
-   - Create agent node function
-   - Update routing logic
-
-### Modifying Routing Logic
-
-Edit the `route_after_supervisor` function in `Multi_Agent.py` to customize how the supervisor routes questions to different agents.
-
-## 📊 Performance
-
-- **Parallel Processing**: Multiple agents can work simultaneously
-- **Caching**: ChromaDB provides efficient vector similarity search
-- **Streaming**: Real-time output streaming for better user experience
 
 ## 🤝 Contributing
 
