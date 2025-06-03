@@ -43,7 +43,7 @@ class Router(TypedDict):
     """Worker to route to next. If no workers needed, route to FINISH."""
     next: Literal["web_researcher", "rag", "nl2sql", "FINISH"]
 
-# Create supervisor node function
+# Define supervisor node function
 def supervisor_node(state: MessagesState) -> Command[Literal["web_researcher", "rag", "nl2sql", "__end__"]]:
     messages = [
         {"role": "system", "content": system_prompt},
@@ -65,6 +65,7 @@ def supervisor_node(state: MessagesState) -> Command[Literal["web_researcher", "
 
 #------------------------------------------------Agent Container for all Specialised Agents------------------------------------------------------#
 
+# Define agent state
 class AgentState(TypedDict):
     """The state of the agent."""
     messages: Annotated[Sequence[BaseMessage], add_messages]
@@ -94,6 +95,7 @@ def create_agent(llm, tools):
 
 #------------------------------------------------Web Search AGENT------------------------------------------------------#
 
+# Create web search agent
 websearch_agent = create_agent(llm, [web_search_tool_func])
 
 def web_research_node(state: MessagesState) -> Command[Literal["supervisor"]]:
@@ -120,6 +122,7 @@ def web_research_node(state: MessagesState) -> Command[Literal["supervisor"]]:
 
 #------------------------------------------------RAG AGENT------------------------------------------------------#
 
+# Create rag agent
 rag_agent = create_agent(llm, [retriever_tool])
 
 def rag_node(state: MessagesState) -> Command[Literal["supervisor"]]:
@@ -146,6 +149,7 @@ def rag_node(state: MessagesState) -> Command[Literal["supervisor"]]:
     
 #------------------------------------------------SQL QUERY AGENT------------------------------------------------------#
 
+# Create sql query agent
 nl2sql_agent = create_agent(llm, [nl2sql_tool])
 
 def nl2sql_node(state: MessagesState) -> Command[Literal["supervisor"]]:
@@ -183,6 +187,7 @@ graph = builder.compile()
 
 #------------------------------------------------ Testing the Agent------------------------------------------------------#
 
+# Define run_agent function
 def run_agent(question: str):
     """Run the multi-agent system with a question."""
     print(f"\n🤖 Processing question: {question}")
@@ -200,6 +205,6 @@ def run_agent(question: str):
 
 
 if __name__ == "__main__":
-    # Example: Complex Query Using Multiple Agents
+    
     input_question = "Find the founder of FutureSmart AI and then do a web research on him"
     run_agent(input_question)

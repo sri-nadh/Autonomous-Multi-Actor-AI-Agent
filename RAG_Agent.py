@@ -44,7 +44,9 @@ folder_path = "./docs"
 documents = load_documents(folder_path)
 print(f"Loaded {len(documents)} documents from the folder.")
 
-# Only proceed if we have documents
+# Initialize vectorstore only if we have documents
+vectorstore = None
+
 if documents:
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
@@ -64,15 +66,9 @@ if documents:
         embedding=embedding_function,
         persist_directory="./chroma_db"
     )
+    print("Vectorstore created successfully.")
 else:
-    # Create empty vectorstore for when no documents are available
-    embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    vectorstore = Chroma(
-        collection_name="my_collection",
-        embedding_function=embedding_function,
-        persist_directory="./chroma_db"
-    )
-    print("No documents found. Created empty vectorstore.")
+    print("No documents found. Vectorstore will be created when documents are added.")
 
 
 class RagToolSchema(BaseModel):
@@ -83,6 +79,11 @@ class RagToolSchema(BaseModel):
 def retriever_tool(question):
     """Tool to Retrieve Semantically Similar documents to answer User Questions related to FutureSmart AI"""
     print("INSIDE RETRIEVER NODE")
+    
+    # Check if vectorstore exists (i.e., if documents were loaded)
+    if vectorstore is None:
+        return "No documents are available in the knowledge base. Please add PDF or DOCX files to the ./docs folder and restart the system."
+    
     try:
         retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
         retriever_result = retriever.invoke(question)
@@ -96,10 +97,12 @@ def retriever_tool(question):
 
 
 # Test the retriever if documents are available
-if documents:
+if documents and vectorstore:
     retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
     try:
         retriever_results = retriever.invoke("Who is the founder of Futuresmart AI?")
         print("Test query results:", retriever_results)
     except Exception as e:
         print(f"Error in test query: {str(e)}")
+else:
+    print("Skipping test query - no documents available.")
