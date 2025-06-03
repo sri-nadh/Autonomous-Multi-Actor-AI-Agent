@@ -43,7 +43,8 @@ class Router(TypedDict):
     """Worker to route to next. If no workers needed, route to FINISH."""
     next: Literal["web_researcher", "rag", "nl2sql", "FINISH"]
 
-# Define supervisor node function
+
+# Define supervisor node function to route the conversation to the appropriate agent
 def supervisor_node(state: MessagesState) -> Command[Literal["web_researcher", "rag", "nl2sql", "__end__"]]:
     messages = [
         {"role": "system", "content": system_prompt},
@@ -205,6 +206,5 @@ def run_agent(question: str):
 
 
 if __name__ == "__main__":
-    
     input_question = "Find the founder of FutureSmart AI and then do a web research on him"
     run_agent(input_question)

@@ -13,6 +13,9 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_community.utilities import SQLDatabase
 
 
+llm = ChatOpenAI(model="gpt-4o")
+
+
 def ensure_chinook_db():
     """Download Chinook database if it doesn't exist."""
     db_path = "Chinook.db"
@@ -41,9 +44,7 @@ else:
     db = None
 
 
-llm = ChatOpenAI(model="gpt-4o")
-
-
+# Define clean_sql_query function
 def clean_sql_query(text: str) -> str:
     """
     Clean SQL query by removing code block syntax, various SQL tags, backticks,
