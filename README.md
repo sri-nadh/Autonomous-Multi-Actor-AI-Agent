@@ -114,6 +114,12 @@ python test_agents.py
 - Comprehensive error handling
 - Modular agent design
 
+### Enhanced SQL Agent
+- **Query Explanation**: Human-readable explanations of SQL queries before execution
+- **Smart Caching**: 24-hour query result caching for improved performance and reduced API costs
+- **Automatic Query Cleaning**: Removes code blocks and formatting artifacts
+- **Result Formatting**: Clear presentation of query results with explanations
+
 ### Flexibility
 - Easy to add new agents
 - Configurable model selection
@@ -138,6 +144,9 @@ Each agent is implemented as a separate module:
 - Natural language to SQL query conversion
 - Automatic Chinook database setup
 - SQL query cleaning and execution
+- **NEW**: Query explanation with human-readable descriptions
+- **NEW**: Intelligent caching system with 24-hour expiration
+- Persistent cache storage in JSON format
 
 ### Multi_Agent.py
 - Supervisor-based routing using Command pattern
@@ -152,7 +161,6 @@ The `test_agents.py` script provides comprehensive testing:
 - Integration testing of the complete system
 - API key validation
 - Error handling verification
-
 
 ## 🤝 Contributing
 
