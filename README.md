@@ -137,7 +137,7 @@ Each agent is implemented as a separate module:
 
 ### RAG_Agent.py
 - Document loading from PDF and DOCX files
-- Vector storage using ChromaDB and Sentence Transformers
+- Vector storage using ChromaDB and Sentence Transformers (Model : multi-qa-mpnet-base-dot-v1)
 - Semantic similarity search for document retrieval
 
 ### SQL_Query_Agent.py
