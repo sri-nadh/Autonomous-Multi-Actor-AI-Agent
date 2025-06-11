@@ -133,7 +133,14 @@ def retriever_tool(question):
 
 # Test the retriever if documents are available
 if documents and vectorstore:
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+    # Use same parameters as the actual tool for consistent testing
+    retriever = vectorstore.as_retriever(
+        search_type="similarity",
+        search_kwargs={
+            "k": 3,
+            "score_threshold": 0.5
+        }
+    )
     try:
         retriever_results = retriever.invoke("Who is the founder of Futuresmart AI?")
         print("✅ Test query successful with Q&A optimized embeddings")
@@ -141,22 +148,5 @@ if documents and vectorstore:
         print(f"❌ Error in test query: {str(e)}")
 else:
     print("⏭️ Skipping test query - no documents available.")
-
-
-# Model information for users
-def get_model_info():
-    """Get information about the current embedding model."""
-    model_info = {
-        "current_model": "multi-qa-mpnet-base-dot-v1",
-        "available_models": {
-            "all-MiniLM-L6-v2": "Fast, 384 dimensions, good for testing",
-            "multi-qa-mpnet-base-dot-v1": "Q&A optimized, 768 dimensions"
-        },
-        "model_details": {
-            "all-MiniLM-L6-v2": "Fast, 384 dimensions, good for testing",
-            "multi-qa-mpnet-base-dot-v1": "Q&A optimized, 768 dimensions"
-        }
-    }
-    return model_info
 
 
