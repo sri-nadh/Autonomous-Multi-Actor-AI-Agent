@@ -220,17 +220,16 @@ def nl2sql_tool(question):
         result = execute_query.invoke(cleaned_query)
         
         # Format the final response
-        final_response = f"""
-        {explanation}
+        final_response = f"""{explanation}
 
-        📊 **Query Results:**
-        {result}
+📊 **Query Results:**
+{result}
 
-        🔧 **SQL Query Used:**
-        ```sql
-        {cleaned_query}
-        ```
-        """
+🔧 **SQL Query Used:**
+```sql
+{cleaned_query}
+```
+"""
         
         # Cache the result
         query_cache.set(question, final_response)
