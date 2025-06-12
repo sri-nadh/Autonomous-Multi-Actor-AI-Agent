@@ -27,12 +27,6 @@ OPENAI_API_KEY=your_openai_api_key_here
 # Tavily API Key (required for web search agent)
 TAVILY_API_KEY=your_tavily_api_key_here
 
-# Optional: Custom model names
-OPENAI_MODEL=gpt-4o
-
-# Optional: Custom paths
-DOCS_FOLDER=./docs
-CHROMA_DB_PATH=./chroma_db
 ```
 
 Required API keys:
