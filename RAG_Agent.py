@@ -51,7 +51,7 @@ if documents:
     # Enhanced text splitting with better chunk management
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
-        chunk_overlap=200,
+        chunk_overlap=250,
         length_function=len,
         separators=["\n\n", "\n", " ", ""]  # Better separation logic
     )
