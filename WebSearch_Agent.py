@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from langchain.tools import tool
 from langchain_tavily import TavilySearch
+import time
 
 load_dotenv()
 
@@ -33,17 +34,17 @@ class WebSearchToolSchema(BaseModel):
 @tool(args_schema=WebSearchToolSchema)
 def web_search_tool_func(query):
     """Tool to search the web for real-time information using Tavily Search"""
-    print("INSIDE WEB SEARCH TOOL")
+    print("🔍 Searching the web...")
     
     if web_search_tool is None:
-        return "Error: Web search not available. Please ensure TAVILY_API_KEY is properly set up."
+        return "❌ Error: Web search not available. Please ensure TAVILY_API_KEY is properly set up."
     
     try:
         # Use the TavilySearch tool to get results
         results = web_search_tool.invoke({"query": query})
         
         if not results:
-            return "No search results found for the given query."
+            return "ℹ️ No search results found for the given query."
         
         # Format the results for better readability
         formatted_results = []
@@ -52,14 +53,20 @@ def web_search_tool_func(query):
                 title = result.get('title', 'No title')
                 content = result.get('content', result.get('snippet', 'No content'))
                 url = result.get('url', 'No URL')
-                formatted_results.append(f"{i}. **{title}**\n   {content}\n   Source: {url}\n")
+                formatted_results.append(
+                    f"📌 Result {i}:\n"
+                    f"📑 Title: {title}\n"
+                    f"📝 Content: {content}\n"
+                    f"🔗 Source: {url}\n"
+                    f"{'─' * 50}\n"
+                )
             else:
-                formatted_results.append(f"{i}. {str(result)}\n")
+                formatted_results.append(f"📌 Result {i}: {str(result)}\n{'─' * 50}\n")
         
         return "\n".join(formatted_results)
         
     except Exception as e:
-        return f"Error during web search: {str(e)}"
+        return f"❌ Error during web search: {str(e)}"
 
 
 # Test the web search tool if available
