@@ -53,7 +53,6 @@ Multi-Actor-AI-Agent/
 ├── SQL_Query_Agent.py      # NL2SQL agent
 ├── RAG_Agent.py           # Document retrieval agent
 ├── WebSearch_Agent.py     # Web search agent
-├── test_agents.py         # Testing script
 ├── requirements.txt       # Python dependencies
 ├── README.md             # This file
 ├── docs/                 # Place your documents here (auto-created)
