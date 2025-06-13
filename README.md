@@ -78,13 +78,6 @@ run_agent(question)
 python Multi_Agent.py
 ```
 
-### Testing the System
-
-Run the test script to verify all agents are working:
-
-```bash
-python test_agents.py
-```
 
 ### Example Queries
 
