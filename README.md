@@ -1,6 +1,6 @@
 # Multi-Actor AI Agent System
 
-An autonomous multi-actor AI agent system built with LangGraph that coordinates three specialized agents:
+An autonomous multi-actor AI agent system built with LangGraph that coordinates three specialized agents. Now includes a FastAPI server for easy frontend integration and chatbot functionality.
 
 ## 🤖 Agents
 
@@ -12,8 +12,14 @@ An autonomous multi-actor AI agent system built with LangGraph that coordinates 
 
 ### 1. Install Dependencies
 
+**For Core System:**
 ```bash
 pip install -r requirements.txt
+```
+
+**For FastAPI Server (Optional):**
+```bash
+pip install fastapi uvicorn pydantic python-multipart
 ```
 
 ### 2. Environment Variables
@@ -53,7 +59,8 @@ Multi-Actor-AI-Agent/
 ├── SQL_Query_Agent.py      # NL2SQL agent
 ├── RAG_Agent.py           # Document retrieval agent
 ├── WebSearch_Agent.py     # Web search agent
-├── requirements.txt       # Python dependencies
+├── app.py                 # FastAPI server for chatbot interface
+├── requirements.txt       # Core system dependencies
 ├── README.md             # This file
 ├── docs/                 # Place your documents here (auto-created)
 ├── chroma_db/           # Vector database (auto-created)
@@ -62,7 +69,7 @@ Multi-Actor-AI-Agent/
 
 ## 🎯 Usage
 
-### Basic Usage
+### Option 1: Direct Python Usage
 
 ```python
 from Multi_Agent import run_agent
@@ -72,11 +79,28 @@ question = "Find information about Tesla's latest earnings and compare it with d
 run_agent(question)
 ```
 
-### Running Directly
-
+**Running Directly:**
 ```bash
 python Multi_Agent.py
 ```
+
+### Option 2: FastAPI Chatbot Server
+
+**Start the server:**
+```bash
+python app.py
+```
+
+The server will start on `http://localhost:8000`
+
+**API Endpoints:**
+- **POST** `/chat` - Main chatbot endpoint
+- **GET** `/` - API information
+- **GET** `/docs` - Interactive API documentation (Swagger UI)
+- **GET** `/capabilities` - Agent capabilities
+- **GET** `/history/{session_id}` - Chat history
+- **GET** `/sessions` - List active sessions
+- **DELETE** `/sessions/{session_id}` - Delete session
 
 
 ### Example Queries
@@ -86,7 +110,39 @@ python Multi_Agent.py
 - **SQL**: "Show me the top 5 customers by total purchase amount"
 - **Multi-Agent**: "Research the current stock price of Apple and find any mentions in our documents"
 
+### FastAPI Usage Examples
+
+**Using curl:**
+```bash
+# Send a chat message
+curl -X POST "http://localhost:8000/chat" \
+     -H "Content-Type: application/json" \
+     -d '{"message": "What are the latest AI developments?"}'
+
+# Check agent capabilities
+curl http://localhost:8000/capabilities
+```
+
+**Using Python requests:**
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:8000/chat",
+    json={"message": "Find Tesla's latest earnings"}
+)
+print(response.json())
+```
+
 ## 🛠 Features
+
+### FastAPI Integration
+- **RESTful API**: Clean REST endpoints for chatbot functionality
+- **Session Management**: Persistent chat sessions with automatic UUID generation
+- **CORS Enabled**: Ready for frontend integration
+- **Interactive Documentation**: Auto-generated Swagger UI at `/docs`
+- **Agent Transparency**: Response includes which agents were used
+- **Error Handling**: Graceful API error responses
 
 ### Error Handling
 - Graceful fallbacks when services are unavailable
@@ -139,14 +195,25 @@ Each agent is implemented as a separate module:
 - Dynamic agent selection based on query type
 - State management across agent interactions
 
+### app.py (FastAPI Server)
+- **Chat API**: RESTful endpoints for chatbot interactions
+- **Session Management**: Maintains conversation context across requests
+- **Agent Integration**: Seamlessly wraps the multi-agent system
+- **Frontend Ready**: CORS enabled with JSON responses
+- **Documentation**: Auto-generated API docs
+
 ## 🧪 Testing
 
-The `test_agents.py` script provides comprehensive testing:
-
+**Core System Testing:**
 - Individual agent functionality tests
 - Integration testing of the complete system
 - API key validation
 - Error handling verification
+
+**FastAPI Testing:**
+- Visit `http://localhost:8000/docs` for interactive API testing
+- Use the provided curl commands or Python examples
+- Test endpoints with different query types to see agent routing
 
 ## 🤝 Contributing
 
