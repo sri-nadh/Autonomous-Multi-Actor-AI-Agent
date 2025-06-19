@@ -5,9 +5,8 @@ from typing import List, Dict, Any, Optional
 import uuid
 from datetime import datetime
 
-
-# Import the multi-agent system
-from Multi_Agent import graph, run_agent
+# multi-agent system
+from Multi_Agent import graph
 
 app = FastAPI(
     title="Multi-Agent Chatbot API",
@@ -18,9 +17,9 @@ app = FastAPI(
 # Add CORS middleware to allow frontend connections
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure this for production
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"],  
+    allow_credentials=False,
+    allow_methods=["POST","GET","DELETE"],
     allow_headers=["*"],
 )
 
