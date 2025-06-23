@@ -31,6 +31,7 @@ class ChatMessage(BaseModel):
     message: str
     session_id: Optional[str] = None
 
+# Chat response model
 class ChatResponse(BaseModel):
     response: str
     session_id: str
@@ -38,10 +39,12 @@ class ChatResponse(BaseModel):
     agents_used: List[str]
     message_id: str
 
+# Chat history model
 class ChatHistory(BaseModel):
     session_id: str
     messages: List[Dict[str, Any]]
 
+# Agent capabilities model
 class AgentCapabilities(BaseModel):
     web_search: str = "Search the web for real-time information and current events"
     rag: str = "Retrieve information from your knowledge base and documents"
