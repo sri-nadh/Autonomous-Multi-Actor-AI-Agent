@@ -8,13 +8,9 @@ from datetime import datetime
 # multi-agent system
 from Multi_Agent import graph
 
-app = FastAPI(
-    title="Multi-Agent Chatbot API",
-    description="A chatbot API powered by specialized AI agents (Web Search, RAG, SQL Query)",
-    version="1.0.0"
-)
+app = FastAPI()
 
-# Add CORS middleware to allow frontend connections
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -196,6 +192,7 @@ async def delete_session(session_id: str):
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
 
 if __name__ == "__main__":
     import uvicorn
