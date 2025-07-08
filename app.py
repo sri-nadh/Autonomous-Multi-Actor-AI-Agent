@@ -4,9 +4,14 @@ from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import uuid
 from datetime import datetime
+import logging
 
 # multi-agent system
 from Multi_Agent import graph
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -99,6 +104,8 @@ async def chat(chat_message: ChatMessage):
         response_content = ""
         
         try:
+            logger.info(f"Processing message for session {session_id}: {chat_message.message[:100]}...")
+            
             # Capture the multi-agent system output
             responses = []
             for s in graph.stream(
@@ -111,6 +118,7 @@ async def chat(chat_message: ChatMessage):
                     for key, value in s.items():
                         if key in ["web_researcher", "rag", "nl2sql"] and key not in agents_used:
                             agents_used.append(key)
+                            logger.info(f"Agent {key} activated for session {session_id}")
             
             # Extract the final response from the last agent
             if responses:
@@ -129,10 +137,11 @@ async def chat(chat_message: ChatMessage):
             # Fallback: if no content extracted, provide a general response
             if not response_content:
                 response_content = "I've processed your request using my specialized agents. How else can I help you?"
+                logger.warning(f"No response content extracted for session {session_id}")
                 
         except Exception as e:
-            response_content = f"I encountered an issue while processing your request: {str(e)}. Please try again."
-            print(f"Error in multi-agent processing: {str(e)}")
+            logger.error(f"Error in multi-agent processing for session {session_id}: {str(e)}", exc_info=True)
+            response_content = f"I encountered an issue while processing your request. Please try rephrasing your question or try again."
         
         # Add assistant response to session history
         assistant_message = {
@@ -153,6 +162,7 @@ async def chat(chat_message: ChatMessage):
         )
         
     except Exception as e:
+        logger.error(f"Unexpected error in chat endpoint: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @app.get("/history/{session_id}", response_model=ChatHistory)
