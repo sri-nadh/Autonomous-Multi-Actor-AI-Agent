@@ -60,6 +60,9 @@ Multi-Actor-AI-Agent/
 ├── RAG_Agent.py           # Document retrieval agent
 ├── WebSearch_Agent.py     # Web search agent
 ├── app.py                 # FastAPI server for chatbot interface
+├── index.html             # Web frontend interface
+├── styles.css             # Frontend styling
+├── script.js              # Frontend JavaScript
 ├── requirements.txt       # Core system dependencies
 ├── README.md             # This file
 ├── docs/                 # Place your documents here (auto-created)
@@ -101,6 +104,25 @@ The server will start on `http://localhost:8000`
 - **GET** `/history/{session_id}` - Chat history
 - **GET** `/sessions` - List active sessions
 - **DELETE** `/sessions/{session_id}` - Delete session
+
+### Option 3: Web Frontend
+
+A modern web interface is included for easy interaction:
+
+**To use the frontend:**
+1. Start the FastAPI server: `python app.py`
+2. Open `index.html` in your browser or serve it locally:
+   ```bash
+   python -m http.server 3000
+   ```
+3. Chat with your AI agents through the beautiful web interface
+
+**Frontend Features:**
+- Modern, responsive design with agent status indicators
+- Real-time chat with typing animations
+- Visual feedback showing which agents are active
+- Session management and chat history
+- Mobile-friendly interface
 
 
 ### Example Queries
